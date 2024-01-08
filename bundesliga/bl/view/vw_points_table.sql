@@ -6,5 +6,6 @@ create or replace view vw_points_table as
                   draws,
                   losses
        from       team
+       where      dml_flag <> 'D'
        order by   points desc;
        

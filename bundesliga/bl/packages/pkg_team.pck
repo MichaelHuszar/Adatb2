@@ -72,7 +72,6 @@ procedure add_team(t_name   in   varchar,
          null,
          null,
          1);
-         commit;
       end;
       end add_team;
       
@@ -100,7 +99,6 @@ procedure add_team(t_name   in   varchar,
                    t.losses = t_losses,
                    t.stadium_id = s_id
                    where t.id = t_id;
-                  commit;
 
       end if;
       
@@ -115,21 +113,13 @@ procedure add_team(t_name   in   varchar,
    procedure delete_team (t_id  in  number) is
      val_team_id number;
      begin
-      select t.id
-      into val_team_id
-      from team t
-      where t.id = t_id;
-       
-      if sql%found
-        then
-          update team t set t.dml_flag = 'D'
+      update team t set t.dml_flag = 'D'
           where t.id = t_id;
-        end if;
-          
-          exception
-          when no_data_found
-          then
+       
+      if sql%rowcount = 0
+        then
           raise exc_team_not_found;
+        end if;
   end delete_team;
       
 end pkg_team;

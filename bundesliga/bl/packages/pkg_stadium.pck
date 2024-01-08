@@ -62,7 +62,6 @@ procedure add_stadium(s_name       in   varchar2,
          null,
          null,
          1);
-         commit;
       end;
       end add_stadium;
       
@@ -86,7 +85,6 @@ procedure add_stadium(s_name       in   varchar2,
                    s.stadium_name = s_name,
                    s.stadium_city = s_city
                    where s.id = st_id;
-                  commit;
 
       end if;
       
@@ -101,21 +99,13 @@ procedure add_stadium(s_name       in   varchar2,
       procedure delete_stadium (st_id  in  number) is
      val_stadium_id number;
      begin
-      select s.id
-      into val_stadium_id
-      from stadium s
-      where s.id = st_id;
-       
-      if sql%found
-        then
-          update stadium s set s.dml_flag = 'D'
+     update stadium s set s.dml_flag = 'D'
           where s.id = st_id;
-        end if;
-          
-          exception
-          when no_data_found
-          then
+       
+      if sql%rowcount = 0
+        then
           raise exc_stadium_not_found;
+        end if;
           
   end delete_stadium;
    

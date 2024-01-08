@@ -45,7 +45,7 @@ create or replace package body pkg_player is
        from player p
        join team t
        on p.team_id = t.id
-       where p.team_id = v_team_id;
+       where p.team_id = v_team_id AND p.dml_flag <> 'D';
        
        return lt_players;
        
@@ -63,7 +63,7 @@ create or replace package body pkg_player is
          from player p
          join team t
          on p.team_id = t.id
-         where p.id = v_player_id;
+         where p.id = v_player_id and p.dml_flag <> 'D';
          
            exception    
      when no_data_found then
@@ -128,7 +128,6 @@ create or replace package body pkg_player is
          null,
          null,
          1);
-         commit;
       end;
       
    end add_player;   
@@ -152,7 +151,6 @@ create or replace package body pkg_player is
                    p.player_assists = p_assists,
                    p.team_id = t_id
                    where p.id = p_id;
-                  commit;
 
       end if;
       
@@ -167,21 +165,14 @@ create or replace package body pkg_player is
            procedure delete_player (p_id  in  number) is
      val_player_id number;
      begin
-      select p.id
-      into val_player_id
-      from player p
-      where p.id = p_id;
-       
-      if sql%found
-        then
+
           update player p set p.dml_flag = 'D'
           where p.id = p_id;
-        end if;
-          
-          exception
-          when no_data_found
-          then
+       
+      if sql%rowcount = 0
+        then
           raise exc_player_not_found;
+        end if;
           
   end delete_player;
   
