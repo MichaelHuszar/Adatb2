@@ -100,7 +100,7 @@ procedure add_stadium(s_name       in   varchar2,
      val_stadium_id number;
      begin
      update stadium s set s.dml_flag = 'D'
-          where s.id = st_id;
+         where s.id = st_id and s.dml_flag <> 'D';
        
       if sql%rowcount = 0
         then

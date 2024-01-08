@@ -167,7 +167,7 @@ create or replace package body pkg_player is
      begin
 
           update player p set p.dml_flag = 'D'
-          where p.id = p_id;
+          where p.id = p_id and p.dml_flag <> 'D';
        
       if sql%rowcount = 0
         then

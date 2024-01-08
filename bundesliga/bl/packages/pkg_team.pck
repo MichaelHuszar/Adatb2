@@ -114,7 +114,7 @@ procedure add_team(t_name   in   varchar,
      val_team_id number;
      begin
       update team t set t.dml_flag = 'D'
-          where t.id = t_id;
+          where t.id = t_id and t.dml_flag <> 'D';
        
       if sql%rowcount = 0
         then
